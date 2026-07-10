@@ -55,7 +55,7 @@ if rag_corpus:
     )
     tools.append(t2s_retrieval)
 
-t2s_rag_agent = Agent(
+root_agent = Agent(
      name="t2s_rag_agent",
     model=Gemini(
         model="gemini-flash-latest",
@@ -66,6 +66,6 @@ t2s_rag_agent = Agent(
 )
 
 app = App(
-    root_agent=t2s_rag_agent,
+    root_agent=root_agent,
     name="app",
 )
