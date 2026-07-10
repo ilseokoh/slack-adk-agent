@@ -1,0 +1,11 @@
+{
+  "remote_agent_runtime_id": "None",
+  "deployment_timestamp": "None",
+  "pending_operation": {
+    "operation_name": "projects/834471899683/locations/asia-northeast1/reasoningEngines/5079066421162409984/operations/854561052950528000",
+    "project": "kevin-ai-playground",
+    "location": "asia-northeast1",
+    "deployment_target": "agent_runtime",
+    "started_at": "2026-07-10T02:56:32.926011+00:00"
+  }
+}

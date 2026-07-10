@@ -1,0 +1,69 @@
+{
+  "version": 3,
+  "skills": {
+    "google-agents-cli-adk-code": {
+      "source": "google/agents-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/google/agents-cli.git",
+      "skillPath": "skills/google-agents-cli-adk-code/SKILL.md",
+      "skillFolderHash": "aa745a646a7000a82c8c5c94c1066a783f60929c",
+      "installedAt": "2026-06-18T04:20:36.422Z",
+      "updatedAt": "2026-07-03T12:09:28.912Z"
+    },
+    "google-agents-cli-deploy": {
+      "source": "google/agents-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/google/agents-cli.git",
+      "skillPath": "skills/google-agents-cli-deploy/SKILL.md",
+      "skillFolderHash": "5e4e05bc33aa7ec3a8420094446e3e0ea7773a49",
+      "installedAt": "2026-06-18T04:20:36.459Z",
+      "updatedAt": "2026-07-03T12:09:28.934Z"
+    },
+    "google-agents-cli-eval": {
+      "source": "google/agents-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/google/agents-cli.git",
+      "skillPath": "skills/google-agents-cli-eval/SKILL.md",
+      "skillFolderHash": "97a58388483b054b1f3a891f91cc4051da0302e5",
+      "installedAt": "2026-06-18T04:20:36.483Z",
+      "updatedAt": "2026-07-03T12:09:28.956Z"
+    },
+    "google-agents-cli-observability": {
+      "source": "google/agents-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/google/agents-cli.git",
+      "skillPath": "skills/google-agents-cli-observability/SKILL.md",
+      "skillFolderHash": "f46979cc568711c1f841a65b4be326066b289edf",
+      "installedAt": "2026-06-18T04:20:36.504Z",
+      "updatedAt": "2026-07-03T12:09:28.979Z"
+    },
+    "google-agents-cli-publish": {
+      "source": "google/agents-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/google/agents-cli.git",
+      "skillPath": "skills/google-agents-cli-publish/SKILL.md",
+      "skillFolderHash": "0f751a80374c57d5928bbe699578e3bbf5e09b61",
+      "installedAt": "2026-06-18T04:20:36.526Z",
+      "updatedAt": "2026-07-03T12:09:29.001Z"
+    },
+    "google-agents-cli-scaffold": {
+      "source": "google/agents-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/google/agents-cli.git",
+      "skillPath": "skills/google-agents-cli-scaffold/SKILL.md",
+      "skillFolderHash": "56bf6a75cc803df2013f340ed51f97e0028d01fe",
+      "installedAt": "2026-06-18T04:20:36.548Z",
+      "updatedAt": "2026-07-03T12:09:29.021Z"
+    },
+    "google-agents-cli-workflow": {
+      "source": "google/agents-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/google/agents-cli.git",
+      "skillPath": "skills/google-agents-cli-workflow/SKILL.md",
+      "skillFolderHash": "87454694c72a10ef0999f9b9286acebe9d6096d4",
+      "installedAt": "2026-06-18T04:20:36.568Z",
+      "updatedAt": "2026-07-03T12:09:29.042Z"
+    }
+  },
+  "dismissed": {}
+}
