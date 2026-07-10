@@ -13,56 +13,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import datetime
 from zoneinfo import ZoneInfo
 
-from google.adk.agents import Agent
+from dotenv import load_dotenv
+
+from google.adk.agents import LlmAgent
 from google.adk.apps import App
 from google.adk.models import Gemini
 from google.genai import types
 
+from google.adk.tools import VertexAiSearchTool
 
-def get_weather(query: str) -> str:
-    """Simulates a web search. Use it get information on weather.
+from .prompts import return_instructions_root
 
-    Args:
-        query: A string containing the location to get weather information for.
+load_dotenv()
 
-    Returns:
-        A string with the simulated weather information for the queried location.
-    """
-    if "sf" in query.lower() or "san francisco" in query.lower():
-        return "It's 60 degrees and foggy."
-    return "It's 90 degrees and sunny."
+# Initialize tools list
+tools = []
 
+datastore = os.environ.get("DATASTORE_PATH")
 
-def get_current_time(query: str) -> str:
-    """Simulates getting the current time for a city.
+if datastore:
+    vertex_search_tool = VertexAiSearchTool(data_store_id=datastore)
+    tools.append(vertex_search_tool)
 
-    Args:
-        city: The name of the city to get the current time for.
-
-    Returns:
-        A string with the current time information.
-    """
-    if "sf" in query.lower() or "san francisco" in query.lower():
-        tz_identifier = "America/Los_Angeles"
-    else:
-        return f"Sorry, I don't have timezone information for query: {query}."
-
-    tz = ZoneInfo(tz_identifier)
-    now = datetime.datetime.now(tz)
-    return f"The current time for query {query} is {now.strftime('%Y-%m-%d %H:%M:%S %Z%z')}"
-
-
-root_agent = Agent(
+root_agent = LlmAgent(
     name="root_agent",
     model=Gemini(
         model="gemini-flash-latest",
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
-    instruction="You are a helpful AI assistant designed to provide accurate and useful information.",
-    tools=[get_weather, get_current_time],
+    instruction=return_instructions_root(),
+    tools=tools,
 )
 
 app = App(
