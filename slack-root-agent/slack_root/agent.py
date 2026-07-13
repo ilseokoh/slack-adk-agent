@@ -12,9 +12,33 @@ from google.adk.apps import App
 
 from .prompts import return_instructions_root
 
+import httpx
+from google.auth import default
+from google.auth.transport.requests import Request as AuthRequest
+
 A2A_CARD_URL = f"/api/a2a/app{AGENT_CARD_WELL_KNOWN_PATH}"
 
 load_dotenv()
+
+class GoogleCloudAuth(httpx.Auth):
+    """Auto-refreshing Google Cloud authentication for httpx.
+
+    Refreshes the access token before each request if expired,
+    so long-running agents never hit 401 errors.
+    """
+
+    def __init__(self):
+        self.credentials, _ = default(
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
+
+    def auth_flow(self, request):
+        # Refresh the token if it is expired or missing
+        if not self.credentials.valid:
+            self.credentials.refresh(AuthRequest())
+            
+        request.headers["Authorization"] = f"Bearer {self.credentials.token}"
+        yield request
 
 caa_agent = RemoteA2aAgent(
     name="caa_agent",
@@ -22,7 +46,7 @@ caa_agent = RemoteA2aAgent(
     agent_card=(
         f"{os.getenv('CAA_AGENT_URL')}{A2A_CARD_URL}"
     ),
-    use_legacy=False,
+    httpx_client=httpx.AsyncClient(auth=GoogleCloudAuth(), timeout=60),
 )
 
 knowledge_agent = RemoteA2aAgent(
@@ -31,7 +55,7 @@ knowledge_agent = RemoteA2aAgent(
     agent_card=(
         f"{os.getenv('KNOWLEDGE_AGENT_URL')}{A2A_CARD_URL}"
     ),
-    use_legacy=False,
+    httpx_client=httpx.AsyncClient(auth=GoogleCloudAuth(), timeout=60),
 )
 
 t2s_agent = RemoteA2aAgent(
@@ -40,7 +64,7 @@ t2s_agent = RemoteA2aAgent(
     agent_card=(
         f"{os.getenv('T2s_AGENT_URL')}{A2A_CARD_URL}"
     ),
-    use_legacy=False,
+    httpx_client=httpx.AsyncClient(auth=GoogleCloudAuth(), timeout=60),
 )
 
 
