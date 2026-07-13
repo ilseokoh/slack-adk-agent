@@ -58,8 +58,8 @@ da_toolset = DataAgentToolset(
     credentials_config=credentials_config,
     data_agent_tool_config=tool_config,
     tool_filter=[
-        "list_accessible_data_agents",
-        "get_data_agent_info",
+        # "list_accessible_data_agents", # 에이전트 리스트()를 가져오는 기능은 현재 필요하지 않으므로 주석 처리
+        # "get_data_agent_info", # 하나의 에이전트만 사용하므로 주석 처리
         "ask_data_agent",
     ],
 )
@@ -70,7 +70,14 @@ root_agent = Agent(
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
     description="Agent to answer user questions using Data Agents.",
-    instruction=f"You are a helpful assistant that answers user questions using Data Agents. \n * Project ID: {os.environ.get('GOOGLE_CLOUD_PROJECT')} \n * Location: {os.environ.get('GOOGLE_CLOUD_LOCATION')} \n * Data Agent ID: {os.environ.get('DATA_AGENT_ID')}",
+    instruction=f"""
+        You are a helpful assistant that answers user questions using Data Agents. 
+        Use only the data agent with the name '{os.environ.get('DATA_AGENT_ID')}' to answer questions.
+        
+        * Project ID: {os.environ.get('GOOGLE_CLOUD_PROJECT')} 
+        * Location: {os.environ.get('GOOGLE_CLOUD_LOCATION')} 
+        * Data Agent ID: {os.environ.get('DATA_AGENT_ID')}
+    """,
     tools=[da_toolset],
 )
 

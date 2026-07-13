@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "google-adk[gcp,slack]>=2.4.0",
+    "google-adk[a2a,gcp,slack]>=2.4.0",
     "python-dotenv>=1.2.2",
     "slack-bolt>=1.29.0",
 ]

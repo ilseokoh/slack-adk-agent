@@ -11,11 +11,11 @@ from slack_root import app as adk_app
 
 load_dotenv()
 
-# print("SLACK_APP_TOKEN", os.getenv("SLACK_APP_TOKEN"))
-# print("SLACK_BOT_TOKEN", os.getenv("SLACK_BOT_TOKEN"))
+print("SLACK_APP_TOKEN", os.getenv("SLACK_APP_TOKEN"))
+print("SLACK_BOT_TOKEN", os.getenv("SLACK_BOT_TOKEN"))
 
 async def main():
-    runner = Runner(app=adk_app, session_service=InMemorySessionService(), app_name="kevin_agent",auto_create_session=True)
+    runner = Runner(app=adk_app, session_service=InMemorySessionService(), app_name="slack_root_agent",auto_create_session=True)
     slack_app = AsyncApp(token=os.environ["SLACK_BOT_TOKEN"])
     slack_runner = SlackRunner(slack_app=slack_app, runner=runner)
     await slack_runner.start(app_token=os.environ["SLACK_APP_TOKEN"])
