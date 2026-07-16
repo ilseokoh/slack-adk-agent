@@ -1,71 +1,88 @@
-# ruff: noqa
-# Copyright 2026 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+import os
 
-import datetime
-from zoneinfo import ZoneInfo
+from google.adk.agents.llm_agent import Agent
+from google.adk.agents.remote_a2a_agent import AGENT_CARD_WELL_KNOWN_PATH
+from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 
-from google.adk.agents import Agent
+from dotenv import load_dotenv
+
+from google.adk.agents.llm_agent import Agent
+from google.adk.tools import google_search
 from google.adk.apps import App
-from google.adk.models import Gemini
-from google.genai import types
 
+from .prompts import return_instructions_root
 
-def get_weather(query: str) -> str:
-    """Simulates a web search. Use it get information on weather.
+import httpx
+from google.auth import default
+from google.auth.transport.requests import Request as AuthRequest
 
-    Args:
-        query: A string containing the location to get weather information for.
+A2A_CARD_URL = f"/api/a2a/app{AGENT_CARD_WELL_KNOWN_PATH}"
 
-    Returns:
-        A string with the simulated weather information for the queried location.
+load_dotenv()
+
+class GoogleCloudAuth(httpx.Auth):
+    """Auto-refreshing Google Cloud authentication for httpx.
+
+    Refreshes the access token before each request if expired,
+    so long-running agents never hit 401 errors.
     """
-    if "sf" in query.lower() or "san francisco" in query.lower():
-        return "It's 60 degrees and foggy."
-    return "It's 90 degrees and sunny."
 
+    def __init__(self):
+        self.credentials, _ = default(
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
 
-def get_current_time(query: str) -> str:
-    """Simulates getting the current time for a city.
+    def auth_flow(self, request):
+        # Refresh the token if it is expired or missing
+        if not self.credentials.valid:
+            self.credentials.refresh(AuthRequest())
+            
+        request.headers["Authorization"] = f"Bearer {self.credentials.token}"
+        yield request
 
-    Args:
-        city: The name of the city to get the current time for.
-
-    Returns:
-        A string with the current time information.
-    """
-    if "sf" in query.lower() or "san francisco" in query.lower():
-        tz_identifier = "America/Los_Angeles"
-    else:
-        return f"Sorry, I don't have timezone information for query: {query}."
-
-    tz = ZoneInfo(tz_identifier)
-    now = datetime.datetime.now(tz)
-    return f"The current time for query {query} is {now.strftime('%Y-%m-%d %H:%M:%S %Z%z')}"
-
-
-root_agent = Agent(
-    name="root_agent",
-    model=Gemini(
-        model="gemini-flash-latest",
-        retry_options=types.HttpRetryOptions(attempts=3),
+caa_agent = RemoteA2aAgent(
+    name="caa_agent",
+    description="Agent that handles checking if numbers are prime.",
+    agent_card=(
+        f"{os.getenv('CAA_AGENT_URL')}{A2A_CARD_URL}"
     ),
-    instruction="You are a helpful AI assistant designed to provide accurate and useful information.",
-    tools=[get_weather, get_current_time],
+    httpx_client=httpx.AsyncClient(auth=GoogleCloudAuth(), timeout=60),
+)
+
+knowledge_agent = RemoteA2aAgent(
+    name="knowledge_agent",
+    description="Agent that handles knowledge-based queries.",
+    agent_card=(
+        f"{os.getenv('KNOWLEDGE_AGENT_URL')}{A2A_CARD_URL}"
+    ),
+    httpx_client=httpx.AsyncClient(auth=GoogleCloudAuth(), timeout=60),
+)
+
+t2s_agent = RemoteA2aAgent(
+    name="t2s_agent",
+    description="Agent that handles text-to-speech conversion.",
+    agent_card=(
+        f"{os.getenv('T2s_AGENT_URL')}{A2A_CARD_URL}"
+    ),
+    httpx_client=httpx.AsyncClient(auth=GoogleCloudAuth(), timeout=60),
+)
+
+# TODO: check the convertor, interceptor: https://adk.dev/a2a/quickstart-consuming/#converters
+
+slack_root_agent = Agent(
+    model='gemini-3.5-flash',
+    name='slack_root_agent',
+    description='A helpful assistant for user questions.',
+    instruction=return_instructions_root(),
+    global_instruction="You are a helpful assistant for user questions.",
+    # config=A2aRemoteAgentConfig(
+    #     a2a_message_converter=my_a2a_message_converter,
+    #     request_interceptors=[my_request_interceptor],
+    # ),
+    sub_agents=[caa_agent, knowledge_agent, t2s_agent],
 )
 
 app = App(
-    root_agent=root_agent,
-    name="app",
+    root_agent=slack_root_agent,
+    name="slack_root_agent",
 )
