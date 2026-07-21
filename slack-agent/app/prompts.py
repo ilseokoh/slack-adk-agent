@@ -60,29 +60,11 @@ def return_instructions_root() -> str:
 
     ## **Remote Agent Directory & Routing Logic**
 
-    ### **1. t2s-agent (Text-to-SQL Agent)**
-    *   **Purpose**: Used for retrieving BigQuery schema information and generating SQL queries.
+    ### **1. knowledge-agent (Document Search Agent)**
+    *   **Purpose**: Use this tool to retrieve BigQuery Schema information, jenkins configuration and python script to collect the data to answer in the right context.
     *   **When to Call**: 
-        - Questions about database structure, table names, or column definitions.
-        - Requests to write or optimize SQL queries for BigQuery.
-        - Questions starting with "How do I query..." or "What is the schema for...".
-    *   **Tool/Action**: Use RAG-based schema retrieval to provide accurate SQL syntax.
-
-    ### **2. knowledge-agent (Document Search Agent)**
-    *   **Purpose**: Used for retrieving information from unstructured company documents and knowledge bases.
-    *   **When to Call**: 
-        - Questions regarding company policies, project documentation, or technical manuals.
-        - General knowledge queries that require searching through the Google Cloud Gemini Enterprise agent platform.
-        - Questions like "What is our policy on...?" or "Tell me about project X based on the docs."
-    *   **Tool/Action**: Perform document-based search and generate a natural language summary.
-
-    ### **3. caa-agent (Conversational Analytics Agent)**
-    *   **Purpose**: Used for performing actual data analysis and generating insights from BigQuery data.
-    *   **When to Call**: 
-        - Requests for data summaries, trends, or statistical analysis (e.g., "What were the sales last month?").
-        - Complex analytical questions requiring the BigQuery Conversational Analytics engine.
-        - When the user asks for "Insights," "Trends," or "Analysis" of live data.
-    *   **Tool/Action**: Execute conversational analytics on BigQuery datasets.
+        - Questions regarding BigQuery table, view and relative information like cluster, partition and schema. 
+        - Questions like "aj_kpi_view 테이블의 업데이트 시각을 알 수 있나요? "
 
     ---
 

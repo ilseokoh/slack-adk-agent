@@ -1,14 +1,7 @@
 {
-  "remote_agent_runtime_id": "projects/834471899683/locations/asia-northeast1/reasoningEngines/3340676964997398528",
+  "remote_agent_runtime_id": "projects/875584556760/locations/asia-northeast1/reasoningEngines/759832903537393664",
   "deployment_target": "agent_runtime",
   "is_a2a": true,
   "agent_directory": "app",
-  "deployment_timestamp": "2026-07-16T01:05:05.661940+00:00",
-  "pending_operation": {
-    "operation_name": "projects/875584556760/locations/asia-northeast1/reasoningEngines/759832903537393664/operations/8455977516975259648",
-    "project": "ai-adk-agent-500306",
-    "location": "asia-northeast1",
-    "deployment_target": "agent_runtime",
-    "started_at": "2026-07-21T05:07:46.733820+00:00"
-  }
+  "deployment_timestamp": "2026-07-21T05:11:41.062003+00:00"
 }
