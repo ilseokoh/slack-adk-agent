@@ -19,12 +19,15 @@ from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
 
-from google.adk.agents import LlmAgent
+from google.adk.agents import Agent
 from google.adk.apps import App
 from google.adk.models import Gemini
 from google.genai import types
 
-from google.adk.tools import VertexAiSearchTool
+from google.adk.tools.retrieval.vertex_ai_rag_retrieval import (
+    VertexAiRagRetrieval,
+)
+from vertexai.preview import rag
 
 from .prompts import return_instructions_root
 
@@ -33,14 +36,28 @@ load_dotenv()
 # Initialize tools list
 tools = []
 
-datastore = os.environ.get("DATASTORE_PATH")
+rag_corpus = os.environ.get("RAG_CORPUS")
+if rag_corpus:
+    knowledge_retrieval = VertexAiRagRetrieval(
+        name="retrieve_t2s_rag",
+        description=(
+            "Use this tool to retrieve BigQuery Schema information documentation and reference materials for the question from the RAG corpus,"
+        ),
+        rag_resources=[
+            rag.RagResource(
+                # please fill in your own rag corpus
+                # here is a sample rag corpus for testing purpose
+                # e.g. projects/123/locations/us-east1/ragCorpora/456
+                rag_corpus=rag_corpus
+            )
+        ],
+        similarity_top_k=10,
+        vector_distance_threshold=0.6,
+    )
+    tools.append(knowledge_retrieval)
 
-if datastore:
-    vertex_search_tool = VertexAiSearchTool(data_store_id=datastore)
-    tools.append(vertex_search_tool)
-
-root_agent = LlmAgent(
-    name="root_agent",
+root_agent = Agent(
+     name="t2s_rag_agent",
     model=Gemini(
         model="gemini-flash-latest",
         retry_options=types.HttpRetryOptions(attempts=3),
