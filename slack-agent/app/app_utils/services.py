@@ -29,7 +29,7 @@ from google.adk.cli.service_registry import get_service_registry
 from google.adk.cli.utils.service_factory import create_session_service_from_options
 from vertexai import agent_engines
 
-SESSION_SERVICE_URI = "shared://session"
+SESSION_SERVICE_URI = "agentengine://4930166158482472960"
 ARTIFACT_SERVICE_URI = "shared://artifact"
 
 _AGENT_DIR = os.path.dirname(

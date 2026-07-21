@@ -46,7 +46,7 @@ knowledge_agent = RemoteA2aAgent(
     agent_card=(
         f"{os.getenv('KNOWLEDGE_AGENT_URL')}{A2A_CARD_URL}"
     ),
-    httpx_client=httpx.AsyncClient(auth=GoogleCloudAuth(), timeout=90),
+    httpx_client=httpx.AsyncClient(auth=GoogleCloudAuth(), timeout=360),
 )
 
 # TODO: check the convertor, interceptor: https://adk.dev/a2a/quickstart-consuming/#converters

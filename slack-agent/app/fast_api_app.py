@@ -49,7 +49,7 @@ AGENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     from app.agent import app as adk_app
-    from app.agent import root_agent
+    from app.agent import slack_root_agent
 
     runner = Runner(
         app=adk_app,
@@ -62,7 +62,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.agent_app_name = adk_app.name
     await attach_a2a_routes(
         app,
-        agent=root_agent,
+        agent=slack_root_agent,
         runner=runner,
         task_store=InMemoryTaskStore(),
         rpc_path=f"/a2a/{adk_app.name}",
