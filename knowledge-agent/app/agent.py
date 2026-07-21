@@ -39,27 +39,24 @@ tools = []
 rag_corpus = os.environ.get("RAG_CORPUS")
 if rag_corpus:
     knowledge_retrieval = VertexAiRagRetrieval(
-        name="retrieve_t2s_rag",
+        name="retrieve_kwowledge_rag",
         description=(
-            "Use this tool to retrieve BigQuery Schema information documentation and reference materials for the question from the RAG corpus,"
+            "Use this tool to retrieve BigQuery Schema information, jenkins configuration and python script to collect the data to answer in the right context."
         ),
         rag_resources=[
             rag.RagResource(
-                # please fill in your own rag corpus
-                # here is a sample rag corpus for testing purpose
-                # e.g. projects/123/locations/us-east1/ragCorpora/456
                 rag_corpus=rag_corpus
             )
         ],
-        similarity_top_k=10,
-        vector_distance_threshold=0.6,
+        similarity_top_k=20,
+        vector_distance_threshold=0.7 # 0.5-default baseline, 0.3-strict filtering, 0.7-relaxed filtering
     )
     tools.append(knowledge_retrieval)
 
 root_agent = Agent(
-     name="t2s_rag_agent",
+     name="knowledge_rag_agent",
     model=Gemini(
-        model="gemini-flash-latest",
+        model="gemini-3.5-flash",
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
     instruction=return_instructions_root(),

@@ -18,11 +18,12 @@ RUN pip install --no-cache-dir uv==0.8.13
 
 WORKDIR /code
 
-COPY ./pyproject.toml ./README.md ./uv.lock* ./
+# 1. uv.lock 복사를 제외하고 pyproject.toml만 복사
+COPY ./pyproject.toml ./README.md ./
 
 COPY ./app ./app
-
-RUN uv sync --frozen
+# 2. 공용 PyPI(pypi.org)에서 프로덕션 패키지만 설치하도록 변경
+RUN uv sync --no-dev --default-index https://pypi.org/simple
 
 ARG COMMIT_SHA=""
 ENV COMMIT_SHA=${COMMIT_SHA}
