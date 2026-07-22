@@ -46,6 +46,7 @@ if TYPE_CHECKING:
 # the capabilities list when needed.
 _ADK_AGENT_EXECUTOR_EXTENSION_URI = (
     "https://google.github.io/adk-docs/a2a/a2a-extension/"
+    
 )
 
 
