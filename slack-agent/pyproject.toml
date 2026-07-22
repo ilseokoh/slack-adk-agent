@@ -14,7 +14,18 @@ dependencies = [
     "gcsfs>=2024.11.0",
     "google-cloud-logging>=3.12.0,<4.0.0",
     "google-cloud-aiplatform[agent-engines,evaluation]>=1.156.0",
-    "protobuf>=6.31.1,<7.0.0",
+    "asyncpg>=0.30.0,<1.0.0",
+    "fastapi>=0.115.8,<1.0.0",
+    "python-multipart>=0.0.20,<1.0.0",
+    "sqlalchemy>=2,<3",
+    "uvicorn~=0.34.0",
+    "opentelemetry-exporter-gcp-logging>=1.12.0a0",
+    "opentelemetry-exporter-gcp-monitoring>=1.12.0a0",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.42.1",
+    "opentelemetry-instrumentation-sqlite3>=0.63b1",
+    "opentelemetry-instrumentation-vertexai>=0.62.1",
+    "slack-bolt>=1.30.0",
+    "python-dotenv>=1.2.2",
 ]
 requires-python = ">=3.11,<3.14"
 
